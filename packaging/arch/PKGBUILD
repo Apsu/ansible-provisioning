@@ -30,7 +30,7 @@ package() {
 
   mkdir -p ${pkgdir}/usr/share/ansible
   cp ./library/* ${pkgdir}/usr/share/ansible/
-  python setup.py install -O1 --root=${pkgdir}
+  python2 setup.py install -O1 --root=${pkgdir}
 
   install -d ${pkgdir}/usr/share/man/man3
   install -t ${pkgdir}/usr/share/man/man3 docs/man/man3/*.3

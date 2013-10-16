@@ -22,9 +22,9 @@ OS = $(shell uname -s)
 # directory of the target file ($@), kinda like `dirname`.
 ASCII2MAN = a2x -D $(dir $@) -d manpage -f manpage $<
 ASCII2HTMLMAN = a2x -D docs/html/man/ -d manpage -f xhtml
-MANPAGES := 
+MANPAGES :=
 
-SITELIB = $(shell python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
+SITELIB = $(shell python2 -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")
 
 # VERSION file provides one place to update the software version
 VERSION := $(shell cat VERSION)
@@ -111,13 +111,13 @@ clean:
 	rm -rf docs/js
 
 python:
-	python setup.py build
+	python2 setup.py build
 
 install:
-	python setup.py install
+	python2 setup.py install
 
 sdist: clean docs
-	python setup.py sdist -t MANIFEST.in
+	python2 setup.py sdist -t MANIFEST.in
 
 rpmcommon: sdist
 	@mkdir -p rpm-build

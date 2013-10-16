@@ -1,42 +1,39 @@
 #Maintainer: Michel Blanc <mblanc@erasme.org>
 pkgname=ansible-provisioning-git
-pkgver=20120419
+_gitname=ansible-provisioning
+pkgver=0.0.0
 pkgrel=1
 pkgdesc="A radically simple deployment, model-driven configuration management, and command execution framework"
-arch=('any')
+arch=("any")
 url="https://ansible.cc"
-license=('GPL3')
-depends=('python2' 'ansible')
-makedepends=('git' 'asciidoc' 'fakeroot')
+license=("GPL3")
+depends=("python2" "ansible")
+makedepends=("git" "asciidoc")
+url="https://github.com/Apsu/ansible-provisioning"
+md5sums=("SKIP")
 
-_gitroot="https://github.com/ansible/ansible-provisioning"
-_gitname="ansible"
+pkgver() {
+  cd $_gitname
+  # Use the tag of the last commit
+  git describe --always | sed 's|-|.|g'
+}
 
 build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
+  cd $_gitname
 
-  if [ -d $_gitname ] ; then
-    cd $_gitname && git pull origin
-    msg "The local files are updated."
-  else
-    git clone $_gitroot $_gitname
-  fi
-
-  msg "GIT checkout done or server timeout"
-
-  cd "$srcdir/$_gitname"
   make
+  make docs
 }
 
 package() {
-  cd "$srcdir/$_gitname"
+  cd $_gitname
 
   mkdir -p ${pkgdir}/usr/share/ansible
   cp ./library/* ${pkgdir}/usr/share/ansible/
   python setup.py install -O1 --root=${pkgdir}
 
-  install docs/man/man3/*.3 ${pkgdir}/usr/share/man/man3/
+  install -d ${pkgdir}/usr/share/man/man3
+  install -t ${pkgdir}/usr/share/man/man3 docs/man/man3/*.3
 
   gzip -9 ${pkgdir}/usr/share/man/man3/*.3
 }
